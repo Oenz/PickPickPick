@@ -28,7 +28,13 @@ public class Player : MonoBehaviour, IPowerUp
 
     void Update()
     {
-        Movement();
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+
+        Vector3 ForwardVector = this.gameObject.transform.forward * moveZ * Time.deltaTime;
+        Vector3 RightVector = this.gameObject.transform.right * moveX * Time.deltaTime;
+        _dir = ForwardVector + RightVector;
+        _dir.Normalize();
 
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
@@ -48,19 +54,6 @@ public class Player : MonoBehaviour, IPowerUp
             Interact();
         }
 
-        
-    }
-
-    void Movement()
-    {
-        float moveX = Input.GetAxis("Horizontal");
-        float moveZ = Input.GetAxis("Vertical");
-
-        Vector3 ForwardVector = this.gameObject.transform.forward * moveZ * Time.deltaTime;
-        Vector3 RightVector = this.gameObject.transform.right * moveX * Time.deltaTime;
-        _dir = ForwardVector + RightVector;
-        _dir.Normalize();
-
         if (_wantsSprint && moveZ >= 0.1f)
         {
             _sprinting = true;
@@ -70,9 +63,9 @@ public class Player : MonoBehaviour, IPowerUp
         {
             _sprinting = false;
         }
-
+        _dir *= _moveSpeed;
         _dir.y = _rb.velocity.y;
-        _rb.velocity = _dir * _moveSpeed;
+        _rb.velocity = _dir;
     }
 
     void SprintStart()

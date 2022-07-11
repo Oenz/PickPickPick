@@ -13,4 +13,13 @@ public class ItemSpeedUp : ItemBase
             ipu.SpeedUp(_speedAmount);
         }
     }
+
+    protected override void CancelUse(GameObject target)
+    {
+        IPowerUp ipu = target.GetComponent<IPowerUp>();
+        if (ipu != null)
+        {
+            ipu.SpeedUp(-_speedAmount);
+        }
+    }
 }
